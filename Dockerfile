@@ -7,11 +7,11 @@ FROM frolvlad/alpine-glibc
 
 MAINTAINER 3846masa
 
-ENV PATH /usr/local/texlive/2018/bin/x86_64-linuxmusl:$PATH
+ENV PATH /usr/local/texlive/2019/bin/x86_64-linuxmusl:$PATH
 
 RUN apk --no-cache add perl wget xz tar fontconfig-dev freetype-dev && \
     mkdir /tmp/install-tl-unx && \
-    wget -qO - ftp://tug.org/historic/systems/texlive/2018/install-tl-unx.tar.gz | \
+    wget -qO - ftp://tug.org/historic/systems/texlive/2019/install-tl-unx.tar.gz | \
     tar -xz -C /tmp/install-tl-unx --strip-components=1 && \
     printf "%s\n" \
       "selected_scheme scheme-basic" \
@@ -19,12 +19,13 @@ RUN apk --no-cache add perl wget xz tar fontconfig-dev freetype-dev && \
       "option_src 0" \
       > /tmp/install-tl-unx/texlive.profile && \
     /tmp/install-tl-unx/install-tl \
-      --profile=/tmp/install-tl-unx/texlive.profile && \
+      --profile=/tmp/install-tl-unx/texlive.profile \
+      --repository http://texlive.texjp.org/2019/tlnet && \
     tlmgr install \
       collection-basic collection-latex \
       collection-latexrecommended collection-latexextra \
       collection-fontsrecommended collection-langjapanese \
-      latexmk xetex && \
+      latexmk xetex lualatex && \
     rm -fr /tmp/install-tl-unx && \
     apk --no-cache del xz tar
 
